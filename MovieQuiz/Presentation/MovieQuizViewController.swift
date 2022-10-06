@@ -1,6 +1,6 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
+final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, AlertDelegate {
     // MARK: - Outlets and Actions
 
     @IBOutlet private weak var poster: UIImageView!
@@ -25,7 +25,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     
-    private var alert: AlertPresenter?
+    private var alert: AlertProtocol?
     private var statisticService: StatisticService?
 
     // MARK: - Lifecycle
@@ -37,6 +37,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         questionFactory = QuestionFactory(delegate: self)
         questionFactory?.requestNextQuestion()
+        
+        alert = AlertPresenter(delegate: self)
         
         statisticService = StatisticServiceImplementation()
     }
@@ -58,6 +60,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             self?.show(quiz: viewModel)
         }
         
+    }
+    
+    // MARK: - AlertDelegate
+    
+    func didGenerateAlertContent(alert: UIAlertController) {
+        self.present(alert, animated: true, completion: nil)
     }
     
     // MARK: - Private methods
@@ -88,14 +96,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
 
     private func show(quiz result: QuizResultsViewModel) {
-        let alert = AlertPresenter(controller: self)
-        let content = AlertModel(
+        let alertModel = AlertModel(
             title: result.title,
             message: result.text,
             buttonText: result.buttonText,
             completion: self.restartQuiz)
-        
-        alert.showAlert(with: content)
+
+        alert?.generateContent(for: alertModel)
     }
 
     private func showAnswerResult(isCorrect: Bool) {

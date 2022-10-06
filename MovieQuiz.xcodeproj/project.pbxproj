@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5520D5CA28EE21FA00F2FF92 /* AlertProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5520D5C928EE21FA00F2FF92 /* AlertProtocol.swift */; };
+		5520D5CC28EE222E00F2FF92 /* AlertDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5520D5CB28EE222E00F2FF92 /* AlertDelegate.swift */; };
 		55685A3028D31B4800527481 /* YS Display-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 55685A2E28D31B4800527481 /* YS Display-Bold.ttf */; };
 		55685A3128D31B4800527481 /* YS Display-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 55685A2F28D31B4800527481 /* YS Display-Medium.ttf */; };
 		55C7366C28E5B7B20056BBAA /* QuestionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C7366B28E5B7B20056BBAA /* QuestionFactory.swift */; };
@@ -30,6 +32,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5520D5C928EE21FA00F2FF92 /* AlertProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertProtocol.swift; sourceTree = "<group>"; };
+		5520D5CB28EE222E00F2FF92 /* AlertDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertDelegate.swift; sourceTree = "<group>"; };
 		55685A2E28D31B4800527481 /* YS Display-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YS Display-Bold.ttf"; sourceTree = "<group>"; };
 		55685A2F28D31B4800527481 /* YS Display-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "YS Display-Medium.ttf"; sourceTree = "<group>"; };
 		55C7366B28E5B7B20056BBAA /* QuestionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionFactory.swift; sourceTree = "<group>"; };
@@ -81,6 +85,8 @@
 				55C7366B28E5B7B20056BBAA /* QuestionFactory.swift */,
 				55C7367428E5C64C0056BBAA /* QuestionFactoryProtocol.swift */,
 				55FB719428E9E4F200A14EC9 /* StatisticService.swift */,
+				5520D5C928EE21FA00F2FF92 /* AlertProtocol.swift */,
+				5520D5CB28EE222E00F2FF92 /* AlertDelegate.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -253,6 +259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5520D5CC28EE222E00F2FF92 /* AlertDelegate.swift in Sources */,
 				AD5EE5DE284D7887003966EF /* UIColor+Extensions.swift in Sources */,
 				55C7367B28E5D1AA0056BBAA /* AlertPresenter.swift in Sources */,
 				55C7367928E5D1150056BBAA /* AlertModel.swift in Sources */,
@@ -261,6 +268,7 @@
 				55C7367728E5CA830056BBAA /* QuestionFactoryDelegate.swift in Sources */,
 				55C7367328E5B9DD0056BBAA /* QuizQuestion.swift in Sources */,
 				55FB719528E9E4F200A14EC9 /* StatisticService.swift in Sources */,
+				5520D5CA28EE21FA00F2FF92 /* AlertProtocol.swift in Sources */,
 				AD1ABAB62831907B00B3E448 /* MovieQuizViewController.swift in Sources */,
 				55C7366F28E5B9900056BBAA /* QuizStepViewModel.swift in Sources */,
 				55C7366C28E5B7B20056BBAA /* QuestionFactory.swift in Sources */,
