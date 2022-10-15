@@ -24,13 +24,22 @@ struct MoviesLoader: MoviesLoading {
         return url
     }
     
+    private enum APIError: Error {
+        case errorMessage(String)
+    }
+    
     func loadMovies(handler: @escaping (Result<MostPopularMovies, Error>) -> Void) {
         networkClient.fetch(url: mostPopularMoviesUrl) { result in
             switch result {
             case .success(let data):
                 do {
                     let json = try JSONDecoder().decode(MostPopularMovies.self, from: data)
-                    handler(.success(json))
+                    
+                    if json.errorMessage.isEmpty && !json.items.isEmpty {
+                        handler(.success(json))
+                    } else {
+                        handler(.failure(APIError.errorMessage(json.errorMessage)))
+                    }
                 } catch {
                     handler(.failure(error))
                 }
