@@ -7,7 +7,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private weak var questionText: UILabel!
     @IBOutlet private weak var questionCounter: UILabel!
     @IBOutlet private var answerButtons: [UIButton]!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         showAnswerResult(isCorrect: checkAnswerCorrectness(for: true))
@@ -73,12 +73,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     private func showLoadingIndicator() {
         activityIndicator.isHidden = false
+        activityIndicator.hidesWhenStopped = true
         activityIndicator.startAnimating()
     }
     
     private func hideLoadingIndicator() {
         activityIndicator.stopAnimating()
-        activityIndicator.isHidden = true
     }
     
     private func showNetworkError(message: String) {
@@ -174,7 +174,6 @@ extension MovieQuizViewController {
         DispatchQueue.main.async { [weak self] in
             self?.show(quiz: viewModel)
         }
-        
     }
     
     func didLoadDataFromServer() {
