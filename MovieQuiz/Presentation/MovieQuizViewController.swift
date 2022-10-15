@@ -7,6 +7,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private weak var questionText: UILabel!
     @IBOutlet private weak var questionCounter: UILabel!
     @IBOutlet private var answerButtons: [UIButton]!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         showAnswerResult(isCorrect: checkAnswerCorrectness(for: true))
@@ -35,8 +36,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         poster.layer.masksToBounds = true
         
-        questionFactory = QuestionFactory(delegate: self)
-        questionFactory?.requestNextQuestion()
+        alert = AlertPresenter(controller: self)
+        
+        questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
+        questionFactory?.loadData()
+        
+        showLoadingIndicator()
         
         statisticService = StatisticServiceImplementation()
     }
@@ -45,19 +50,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
-    }
-    
-    // MARK: - QuestionFactoryDelegate
-    
-    func didRecieveNextQuestion(question: QuizQuestion?) {
-        guard let question = question else { return }
-        
-        currentQuestion = question
-        let viewModel = convert(model: question)
-        DispatchQueue.main.async { [weak self] in
-            self?.show(quiz: viewModel)
-        }
-        
     }
     
     // MARK: - Private methods
@@ -74,9 +66,34 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
 
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+            image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
+    }
+    
+    private func showLoadingIndicator() {
+        activityIndicator.isHidden = false
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.startAnimating()
+    }
+    
+    private func hideLoadingIndicator() {
+        activityIndicator.stopAnimating()
+    }
+    
+    private func showNetworkError(message: String) {
+        hideLoadingIndicator()
+        
+        let content = AlertModel(
+            title: "Ошибка",
+            message: message,
+            buttonText: "Попробовать ещё раз") { [weak self] in
+                guard let self = self else { return }
+                
+                self.questionFactory?.loadData()
+            }
+        
+        alert?.showAlert(with: content)
     }
 
     private func show(quiz step: QuizStepViewModel) {
@@ -88,14 +105,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
 
     private func show(quiz result: QuizResultsViewModel) {
-        let alert = AlertPresenter(controller: self)
         let content = AlertModel(
             title: result.title,
             message: result.text,
             buttonText: result.buttonText,
             completion: self.restartQuiz)
         
-        alert.showAlert(with: content)
+        alert?.showAlert(with: content)
     }
 
     private func showAnswerResult(isCorrect: Bool) {
@@ -144,5 +160,28 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         correctAnswersCount = 0
 
         questionFactory?.requestNextQuestion()
+    }
+}
+
+// MARK: - QuestionFactoryDelegate
+
+extension MovieQuizViewController {
+    func didRecieveNextQuestion(question: QuizQuestion?) {
+        guard let question = question else { return }
+        
+        currentQuestion = question
+        let viewModel = convert(model: question)
+        DispatchQueue.main.async { [weak self] in
+            self?.show(quiz: viewModel)
+        }
+    }
+    
+    func didLoadDataFromServer() {
+        hideLoadingIndicator()
+        restartQuiz()
+    }
+    
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
     }
 }
