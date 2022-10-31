@@ -17,6 +17,8 @@ struct AlertPresenter {
             message: content.message,
             preferredStyle: .alert)
         
+        alert.view.accessibilityIdentifier = "Results"
+        
         let action = UIAlertAction(title: content.buttonText, style: .cancel) { _ in
             content.completion()
         }
